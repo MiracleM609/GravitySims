@@ -1,11 +1,11 @@
 from math import *
 from random import randint
 
-import calc,circle,random
+import calc,circle
 
 def create_n_objs(n,game):
     for i in range(n):
-        new_obj = circle.Object(game, random.randint(0,800), random.randint(0,800), 5, 5,m=randint(1000,10000000),colour="green")
+        new_obj = circle.Object(game,randint(0,800), randint(0,800), 5, 5,m=randint(1000,10000000),colour="green")
         game.objs.append(new_obj)
         game.objs_hitbox.append(new_obj.hitbox)
         game.nx.append(0)
@@ -25,8 +25,8 @@ def sim4(self,objs, ini_v):
             dy2 = calc.dy(obj2, obj1)
             r1 = hypot(dx1, dy1)
             r2 = hypot(dx2, dy2)
-            fg = float(G) * obj1.m * obj2.m / r1
-            fg2 = float(G) * obj1.m * obj2.m / r2
+            fg = -float(G) * obj1.m * obj2.m / r1
+            fg2 = -float(G) * obj1.m * obj2.m / r2
             v_o1 = fg / obj1.m
             v_o2 = fg2 / obj2.m
             a1 = calc.calc_angle(obj1, obj2)
@@ -48,14 +48,13 @@ def sim4(self,objs, ini_v):
                     # immer um fg ableiten
                     self.nx[objs.index(obj1)], self.ny[objs.index(obj1)] = self.nx[objs.index(obj1)] + gx1, self.ny[objs.index(obj1)] + gy1
                     self.nx[objs.index(obj2)], self.ny[objs.index(obj2)] = self.nx[objs.index(obj2)] + gx2, self.ny[objs.index(obj2)] + gy2
-                obj1.x -= self.nx[objs.index(obj1)] *0.01
-                obj1.y -= self.ny[objs.index(obj1)] *0.01
-                obj2.x -= self.nx[objs.index(obj2)]*0.01
-                obj2.y -= self.ny[objs.index(obj2)]*0.01
+                obj1.x += (self.nx[objs.index(obj1)]) *self.slow
+                obj1.y += (self.ny[objs.index(obj1)]) *self.slow
+                obj2.x += (self.nx[objs.index(obj2)])*self.slow
+                obj2.y += (self.ny[objs.index(obj2)])*self.slow
             except ValueError:
                 print("well")
-            print(obj1.x, obj1.y, obj2.x, obj2.y)
-
+            print(self.nx,self.ny)
 #    dx1 = calc.dx(obj1, obj2)
 #    dy1 = calc.dy(obj1, obj2)
 #    dx2 = calc.dx(obj2, obj1)
